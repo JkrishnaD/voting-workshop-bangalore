@@ -213,6 +213,13 @@
       ]
     }
   ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "PollEndShouldBeInFuture",
+      "msg": "Poll end time should be in the future"
+    }
+  ],
   "types": [
     {
       "name": "Candidate",
@@ -253,6 +260,10 @@
           },
           {
             "name": "candidate_amount",
+            "type": "u64"
+          },
+          {
+            "name": "candidate_count",
             "type": "u64"
           }
         ]

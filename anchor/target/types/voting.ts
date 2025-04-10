@@ -219,6 +219,13 @@ export type Voting = {
       ]
     }
   ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "pollEndShouldBeInFuture",
+      "msg": "Poll end time should be in the future"
+    }
+  ],
   "types": [
     {
       "name": "candidate",
@@ -259,6 +266,10 @@ export type Voting = {
           },
           {
             "name": "candidateAmount",
+            "type": "u64"
+          },
+          {
+            "name": "candidateCount",
             "type": "u64"
           }
         ]

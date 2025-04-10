@@ -13,7 +13,9 @@ pub mod voting {
                             description: String,
                             poll_start: u64,
                             poll_end: u64) -> Result<()> {
-
+          let clock= Clock::get()?;   
+        let current_timestamp=clock.unix_timestamp as u64;
+        require!(poll_end > current_timestamp, VotingError::PollEndShouldBeInFuture); 
         let poll = &mut ctx.accounts.poll;
         poll.poll_id = poll_id;
         poll.description = description;
@@ -30,6 +32,8 @@ pub mod voting {
         let candidate = &mut ctx.accounts.candidate;
         candidate.candidate_name = candidate_name;
         candidate.candidate_votes = 0;
+        let poll =&mut ctx.accounts.poll;
+        poll.candidate_count+=1;
         Ok(())
     }
 
@@ -85,7 +89,7 @@ pub struct InitializeCandidate<'info> {
       payer = signer,
       space = 8 + Candidate::INIT_SPACE,
       seeds = [poll_id.to_le_bytes().as_ref(), candidate_name.as_ref()],
-      bump
+      bump,
     )]
     pub candidate: Account<'info, Candidate>,
     pub system_program: Program<'info, System>,
@@ -124,4 +128,11 @@ pub struct Poll {
     pub poll_start: u64,
     pub poll_end: u64,
     pub candidate_amount: u64,
+    pub candidate_count: u64,
+}
+
+#[error_code]
+pub enum VotingError{
+  #[msg("Poll end time should be in the future")]
+  PollEndShouldBeInFuture,
 }

@@ -25,7 +25,7 @@ describe("Voting", () => {
       new anchor.BN(1),
       "What is your favorite color?",
       new anchor.BN(100),
-      new anchor.BN(1739370789),
+      new anchor.BN(Math.floor(Date.now()/1000)+1000),
     ).rpc();
 
     const [pollAddress] = PublicKey.findProgramAddressSync(
@@ -103,4 +103,21 @@ describe("Voting", () => {
     expect(blueCandidate.candidateVotes.toNumber()).toBe(1);
     expect(blueCandidate.candidateName).toBe("Blue");
   });
+
+  it("Should fail if poll end is in the past", async()=>{
+    const past_time= new anchor.BN(Math.floor(Date.now()/1000)-10);
+    const now_time= new anchor.BN(Math.floor(Date.now()/1000));
+    const pollId=new anchor.BN(36);
+
+    try{
+      await votingProgram.methods.initializePoll(
+        pollId,
+        "Invalid Poll - Ends in the past",
+        now_time,
+        past_time,
+      ).rpc()
+    }catch(err: any){
+      expect(err.error?.errorMessage).toMatch(/Poll end time should be in the future/);
+    }
+  })
 });
