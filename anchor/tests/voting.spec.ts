@@ -21,11 +21,12 @@ describe("Voting", () => {
   });
 
   it("initializes a poll", async () => {
+    const currentTime = Math.floor(Date.now() / 1000);
     await votingProgram.methods.initializePoll(
       new anchor.BN(1),
       "What is your favorite color?",
-      new anchor.BN(100),
-      new anchor.BN(Math.floor(Date.now()/1000)+1000),
+      new anchor.BN(currentTime + 10),
+      new anchor.BN(currentTime + 1000),
     ).rpc();
 
     const [pollAddress] = PublicKey.findProgramAddressSync(
@@ -39,8 +40,9 @@ describe("Voting", () => {
 
     expect(poll.pollId.toNumber()).toBe(1);
     expect(poll.description).toBe("What is your favorite color?");
-    expect(poll.pollStart.toNumber()).toBe(100);
+    expect(poll.pollStart.toNumber()).toBe(currentTime + 10);
   });
+
 
   it("initializes candidates", async () => {
     await votingProgram.methods.initializeCandidate(
@@ -119,5 +121,42 @@ describe("Voting", () => {
     }catch(err: any){
       expect(err.error?.errorMessage).toMatch(/Poll end time should be in the future/);
     }
-  })
+  });
+
+  it("Should fail if poll timestamps are out of allowed bounds", async () => {
+    const lowStart = new anchor.BN(100); // before 1600000000
+    const highEnd = new anchor.BN(6000000000); // after 5000000000
+    const pollId = new anchor.BN(96);
+  
+    try {
+      await votingProgram.methods.initializePoll(
+        pollId,
+        "Poll with bad timestamps",
+        lowStart,
+        highEnd
+      ).rpc();
+      throw new Error("Expected error was not thrown");
+    } catch (err: any) {
+      expect(err.error?.errorMessage).toMatch(/Poll start or end timestamp is out of allowed bounds/);
+    }
+  });
+
+  it("Should fail if poll end is before poll start", async () => {
+    const current_time = Math.floor(Date.now() / 1000);
+    const start_time = new anchor.BN(current_time + 1000);
+    const end_time = new anchor.BN(current_time + 500); // ending before it starts
+    const pollId = new anchor.BN(88);
+  
+    try {
+      await votingProgram.methods.initializePoll(
+        pollId,
+        "Poll ends before it starts",
+        start_time,
+        end_time
+      ).rpc();
+      throw new Error("Expected error was not thrown");
+    } catch (err: any) {
+      expect(err.error?.errorMessage).toMatch(/Poll end time should be after poll start time/);
+    }
+  });
 });

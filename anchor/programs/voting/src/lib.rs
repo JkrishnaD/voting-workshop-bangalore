@@ -13,9 +13,18 @@ pub mod voting {
                             description: String,
                             poll_start: u64,
                             poll_end: u64) -> Result<()> {
-          let clock= Clock::get()?;   
+        let clock= Clock::get()?;   
         let current_timestamp=clock.unix_timestamp as u64;
+        const MIN_REASONABLE_TIMESTAMP: u64 = 1600000000;
+        const MAX_REASONABLE_TIMESTAMP: u64= 5000000000;
+
+        require!(
+          (poll_start >= MIN_REASONABLE_TIMESTAMP && poll_start <= MAX_REASONABLE_TIMESTAMP) &&
+          (poll_end >= MIN_REASONABLE_TIMESTAMP && poll_end <= MAX_REASONABLE_TIMESTAMP),
+          VotingError::InvalidPollTimestamp
+        );
         require!(poll_end > current_timestamp, VotingError::PollEndShouldBeInFuture); 
+        require!(poll_end > poll_start, VotingError::PollEndBeforeStart);
         let poll = &mut ctx.accounts.poll;
         poll.poll_id = poll_id;
         poll.description = description;
@@ -135,4 +144,8 @@ pub struct Poll {
 pub enum VotingError{
   #[msg("Poll end time should be in the future")]
   PollEndShouldBeInFuture,
+  #[msg("Poll end time should be after poll start time")]
+  PollEndBeforeStart,
+  #[msg("Poll start or end timestamp is out of allowed bounds")]
+  InvalidPollTimestamp,
 }
