@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/voting.json`.
  */
 export type Voting = {
-  "address": "coUnmi3oBUtwtd9fjeAvSsJssXh5A5xyPbhpewyzRVF",
+  "address": "4VJ8dXrKwYYgmcX3egWmdN9mAjLLjWT2nqpLHFPG7D9S",
   "metadata": {
     "name": "voting",
     "version": "0.1.0",
@@ -149,6 +149,7 @@ export type Voting = {
         },
         {
           "name": "poll",
+          "writable": true,
           "pda": {
             "seeds": [
               {
@@ -170,6 +171,22 @@ export type Voting = {
               {
                 "kind": "arg",
                 "path": "candidateName"
+              }
+            ]
+          }
+        },
+        {
+          "name": "voterRecord",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "signer"
+              },
+              {
+                "kind": "arg",
+                "path": "pollId"
               }
             ]
           }
@@ -217,6 +234,51 @@ export type Voting = {
         153,
         111
       ]
+    },
+    {
+      "name": "voterRecord",
+      "discriminator": [
+        178,
+        96,
+        138,
+        116,
+        143,
+        202,
+        115,
+        33
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "pollNotStarted",
+      "msg": "The poll has not started yet"
+    },
+    {
+      "code": 6001,
+      "name": "pollEnded",
+      "msg": "The poll has already ended"
+    },
+    {
+      "code": 6002,
+      "name": "invalidTimestamp",
+      "msg": "Invalid timestamp provided"
+    },
+    {
+      "code": 6003,
+      "name": "pollEndedInPast",
+      "msg": "Poll end time must be in the future"
+    },
+    {
+      "code": 6004,
+      "name": "invalidPollDuration",
+      "msg": "Poll start time must be before end time"
+    },
+    {
+      "code": 6005,
+      "name": "alreadyVoted",
+      "msg": "This address has already voted for this poll"
     }
   ],
   "errors": [
@@ -277,6 +339,26 @@ export type Voting = {
           {
             "name": "candidateAmount",
             "type": "u64"
+          },
+          {
+            "name": "totalVotes",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "voterRecord",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "voted",
+            "type": "bool"
+          },
+          {
+            "name": "poll",
+            "type": "pubkey"
           }
         ]
       }
