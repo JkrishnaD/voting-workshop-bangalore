@@ -59,7 +59,6 @@ describe("Voting", () => {
       [new anchor.BN(1).toArrayLike(Buffer, "le", 8)],
       votingProgram.programId,
     );
-
     const poll = await votingProgram.account.poll.fetch(pollAddress);
 
     console.log(poll);
@@ -78,7 +77,6 @@ describe("Voting", () => {
       "Blue",
       new anchor.BN(1),
     ).rpc();
-
     const [pinkAddress] = PublicKey.findProgramAddressSync(
       [new anchor.BN(1).toArrayLike(Buffer, "le", 8), Buffer.from("Pink")],
       votingProgram.programId,
@@ -141,5 +139,6 @@ describe("Voting", () => {
     } catch (err: any) {
       expect(err.toString()).toMatch(/Voter has already cast a vote/i);
     }
+
   });
 });
