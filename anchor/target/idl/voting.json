@@ -143,7 +143,6 @@
         },
         {
           "name": "poll",
-          "writable": true,
           "pda": {
             "seeds": [
               {
@@ -165,22 +164,6 @@
               {
                 "kind": "arg",
                 "path": "candidate_name"
-              }
-            ]
-          }
-        },
-        {
-          "name": "voter_record",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "account",
-                "path": "signer"
-              },
-              {
-                "kind": "arg",
-                "path": "poll_id"
               }
             ]
           }
@@ -228,51 +211,6 @@
         153,
         111
       ]
-    },
-    {
-      "name": "VoterRecord",
-      "discriminator": [
-        178,
-        96,
-        138,
-        116,
-        143,
-        202,
-        115,
-        33
-      ]
-    }
-  ],
-  "errors": [
-    {
-      "code": 6000,
-      "name": "PollNotStarted",
-      "msg": "The poll has not started yet"
-    },
-    {
-      "code": 6001,
-      "name": "PollEnded",
-      "msg": "The poll has already ended"
-    },
-    {
-      "code": 6002,
-      "name": "InvalidTimestamp",
-      "msg": "Invalid timestamp provided"
-    },
-    {
-      "code": 6003,
-      "name": "PollEndedInPast",
-      "msg": "Poll end time must be in the future"
-    },
-    {
-      "code": 6004,
-      "name": "InvalidPollDuration",
-      "msg": "Poll start time must be before end time"
-    },
-    {
-      "code": 6005,
-      "name": "AlreadyVoted",
-      "msg": "This address has already voted for this poll"
     }
   ],
   "errors": [
@@ -333,26 +271,6 @@
           {
             "name": "candidate_amount",
             "type": "u64"
-          },
-          {
-            "name": "total_votes",
-            "type": "u64"
-          }
-        ]
-      }
-    },
-    {
-      "name": "VoterRecord",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "voted",
-            "type": "bool"
-          },
-          {
-            "name": "poll",
-            "type": "pubkey"
           }
         ]
       }
