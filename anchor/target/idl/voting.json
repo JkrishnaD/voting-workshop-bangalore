@@ -216,6 +216,18 @@
   "errors": [
     {
       "code": 6000,
+      "name": "PollEndShouldBeInFuture",
+      "msg": "Poll end time should be in the future"
+    },
+    {
+      "code": 6001,
+      "name": "PollEndBeforeStart",
+      "msg": "Poll end time should be after poll start time"
+    },
+    {
+      "code": 6002,
+      "name": "InvalidPollTimestamp",
+      "msg": "Poll start or end timestamp is out of allowed bounds"
       "name": "PollNotStarted",
       "msg": "The poll has not started yet"
     },
@@ -265,6 +277,10 @@
           },
           {
             "name": "candidate_amount",
+            "type": "u64"
+          },
+          {
+            "name": "candidate_count",
             "type": "u64"
           }
         ]
