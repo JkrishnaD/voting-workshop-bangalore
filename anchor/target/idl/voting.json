@@ -1,5 +1,5 @@
 {
-  "address": "4VJ8dXrKwYYgmcX3egWmdN9mAjLLjWT2nqpLHFPG7D9S",
+  "address": "BkhaGBLsZqAd3GwdKJoaY5v8xq843kAVkr2gfymExzYR",
   "metadata": {
     "name": "voting",
     "version": "0.1.0",
@@ -247,6 +247,18 @@
       "code": 6000,
       "name": "AlreadyVoted",
       "msg": "Voter has already cast a vote in this poll"
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "PollNotStarted",
+      "msg": "The poll has not started yet"
+    },
+    {
+      "code": 6001,
+      "name": "PollEnded",
+      "msg": "The poll has already ended"
     }
   ],
   "types": [
