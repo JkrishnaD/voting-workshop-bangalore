@@ -152,13 +152,6 @@ pub struct Poll {
 #[account]
 #[derive(InitSpace)]
 pub struct VoterRecord {
-    pub voted: bool,
-    pub poll: Pubkey,
-}
-
-#[account]
-#[derive(InitSpace)]
-pub struct VoterRecord {
     pub voter: Pubkey,
     pub poll_id: u64,
     pub has_voted: bool,
