@@ -258,6 +258,18 @@ export type Voting = {
   "errors": [
     {
       "code": 6000,
+      "name": "pollEndShouldBeInFuture",
+      "msg": "Poll end time should be in the future"
+    },
+    {
+      "code": 6001,
+      "name": "pollEndBeforeStart",
+      "msg": "Poll end time should be after poll start time"
+    },
+    {
+      "code": 6002,
+      "name": "invalidPollTimestamp",
+      "msg": "Poll start or end timestamp is out of allowed bounds"
       "name": "pollNotStarted",
       "msg": "The poll has not started yet"
     },
