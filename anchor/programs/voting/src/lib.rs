@@ -2,6 +2,14 @@
 
 use anchor_lang::prelude::*;
 
+#[error_code]
+pub enum VotingError {
+    #[msg("The poll has not started yet")]
+    PollNotStarted,
+    #[msg("The poll has already ended")]
+    PollEnded,
+}
+
 declare_id!("coUnmi3oBUtwtd9fjeAvSsJssXh5A5xyPbhpewyzRVF");
 
 #[program]
@@ -41,12 +49,26 @@ pub mod voting {
         let candidate = &mut ctx.accounts.candidate;
         candidate.candidate_name = candidate_name;
         candidate.candidate_votes = 0;
-        let poll =&mut ctx.accounts.poll;
-        poll.candidate_count+=1;
+
+        let poll = &mut ctx.accounts.poll;
+        poll.candidate_amount += 1;
         Ok(())
     }
 
     pub fn vote(ctx: Context<Vote>, _candidate_name: String, _poll_id: u64) -> Result<()> {
+        let poll = &ctx.accounts.poll;
+        let current_time = Clock::get()?.unix_timestamp as u64;
+
+        require!(
+            current_time >= poll.poll_start,
+            VotingError::PollNotStarted
+        );
+
+        require!(
+            current_time <= poll.poll_end,
+            VotingError::PollEnded
+        );
+
         let candidate = &mut ctx.accounts.candidate;
         candidate.candidate_votes += 1;
 

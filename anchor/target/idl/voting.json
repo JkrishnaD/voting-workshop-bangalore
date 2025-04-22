@@ -1,5 +1,5 @@
 {
-  "address": "coUnmi3oBUtwtd9fjeAvSsJssXh5A5xyPbhpewyzRVF",
+  "address": "BkhaGBLsZqAd3GwdKJoaY5v8xq843kAVkr2gfymExzYR",
   "metadata": {
     "name": "voting",
     "version": "0.1.0",
@@ -228,6 +228,13 @@
       "code": 6002,
       "name": "InvalidPollTimestamp",
       "msg": "Poll start or end timestamp is out of allowed bounds"
+      "name": "PollNotStarted",
+      "msg": "The poll has not started yet"
+    },
+    {
+      "code": 6001,
+      "name": "PollEnded",
+      "msg": "The poll has already ended"
     }
   ],
   "types": [
